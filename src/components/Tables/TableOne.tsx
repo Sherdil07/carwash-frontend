@@ -40,7 +40,7 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
   // Effect to listen for new invoices added from parent
   useEffect(() => {
     const fetchInvoices = async () => {
-      const response = await fetch("http://localhost:4000/api/invoices");
+      const response = await fetch("/api/invoices");
       const data = await response.json();
       setInvoiceData(data);
     };

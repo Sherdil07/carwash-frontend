@@ -10,7 +10,7 @@
     "dist": "electron-builder",
     "dev": "concurrently \"npm run dev-frontend\" \"npm run dev-backend\"",
     "dev-frontend": "next dev",
-    "dev-backend": "node server/server.js"
+    "dev-backend": "node src/server.js"
   },
   "dependencies": {
     "apexcharts": "^3.45.2",
