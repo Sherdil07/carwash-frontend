@@ -40,9 +40,7 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
   // Effect to listen for new invoices added from parent
   useEffect(() => {
     const fetchInvoices = async () => {
-      const response = await fetch(
-        "https://carwash-ten.vercel.app//api/invoices",
-      );
+      const response = await fetch("/api/invoices");
       const data = await response.json();
       setInvoiceData(data);
     };
@@ -62,12 +60,9 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
     );
     if (confirmed) {
       try {
-        const response = await fetch(
-          `https://carwash-ten.vercel.app/api/invoices/${id}`,
-          {
-            method: "DELETE",
-          },
-        );
+        const response = await fetch(`/api/invoices/${id}`, {
+          method: "DELETE",
+        });
         if (response.ok) {
           setInvoiceData((prev) => prev.filter((invoice) => invoice.id !== id));
         } else {
