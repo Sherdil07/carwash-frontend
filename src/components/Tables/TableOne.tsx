@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 interface InvoiceData {
-  _id: string; // Use MongoDB _id for uniqueness
+  _id: string;
   name: string;
   email: string;
   phone: string;
@@ -24,7 +24,6 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5;
 
-  // Fetch invoices on component mount
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
@@ -39,7 +38,6 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
     fetchInvoices();
   }, []);
 
-  // Add new invoice
   const handleAddInvoice = async (newInvoice: InvoiceData) => {
     try {
       const response = await axios.post(
@@ -53,7 +51,6 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
     }
   };
 
-  // Delete an invoice
   const handleDeleteInvoice = async (id: string) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this invoice?",
@@ -70,7 +67,6 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
     }
   };
 
-  // Update an invoice
   const handleUpdateInvoice = async (id: string) => {
     const updatedDetails = prompt(
       "Enter updated invoice details (JSON format):",
@@ -102,8 +98,8 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
   );
 
   return (
-    <div className="rounded-[10px] bg-white px-7.5 pb-4 pt-7.5 shadow-1">
-      <h4 className="mb-5.5 text-body-2xlg font-bold text-dark">Invoices</h4>
+    <div className="bg-dark-blue rounded-lg px-6 pb-6 pt-4 text-white shadow-lg">
+      <h4 className="mb-5 text-xl font-bold">Invoices</h4>
 
       <div className="mb-4 flex justify-end">
         <input
@@ -111,40 +107,40 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
           placeholder="Search by name"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="rounded border px-4 py-2"
+          className="rounded border px-4 py-2 text-black"
         />
       </div>
 
       <div className="flex flex-col">
-        <div className="grid grid-cols-6">{/* Table headers */}</div>
+        <div className="grid grid-cols-6 gap-2 text-center font-semibold md:grid-cols-6">
+          <div>Name</div>
+          <div>Car Number</div>
+          <div>Services</div>
+          <div>Total</div>
+          <div>Date</div>
+          <div>Actions</div>
+        </div>
 
         {currentInvoices.map((invoice) => (
-          <div className="grid grid-cols-6" key={invoice._id}>
-            <div className="flex items-center px-2 py-4">
-              <p>{invoice.name}</p>
-            </div>
-            <div className="flex items-center px-2 py-4">
-              <p>{invoice.carNumber}</p>
-            </div>
-            <div className="flex items-center px-2 py-4">
-              <p>{invoice.services.join(", ")}</p>
-            </div>
-            <div className="flex items-center px-2 py-4">
-              <p>${invoice.total.toFixed(2)}</p>
-            </div>
-            <div className="flex items-center px-2 py-4">
-              <p>{invoice.date}</p>
-            </div>
-            <div className="flex items-center px-2 py-4">
+          <div
+            className="grid grid-cols-2 gap-2 border-b border-gray-400 py-2 text-center text-sm md:grid-cols-6 md:gap-4"
+            key={invoice._id}
+          >
+            <div>{invoice.name}</div>
+            <div>{invoice.carNumber}</div>
+            <div>{invoice.services.join(", ")}</div>
+            <div>${invoice.total.toFixed(2)}</div>
+            <div>{invoice.date}</div>
+            <div className="flex justify-center space-x-2">
               <button
                 onClick={() => handleUpdateInvoice(invoice._id)}
-                className="mr-2 bg-yellow-500 px-2 py-1 text-white"
+                className="rounded bg-yellow-500 px-2 py-1 text-white"
               >
                 Update
               </button>
               <button
                 onClick={() => handleDeleteInvoice(invoice._id)}
-                className="bg-red-500 px-2 py-1 text-white"
+                className="rounded bg-red-500 px-2 py-1 text-white"
               >
                 Delete
               </button>
@@ -157,7 +153,7 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
-          className="bg-blue-500 px-4 py-2 text-white"
+          className="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
         >
           Previous
         </button>
@@ -169,7 +165,7 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
           }
           disabled={currentPage === totalPages}
-          className="bg-blue-500 px-4 py-2 text-white"
+          className="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
         >
           Next
         </button>
