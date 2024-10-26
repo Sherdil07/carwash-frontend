@@ -111,26 +111,33 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
         />
       </div>
 
-      <div className="flex flex-col">
-        <div className="grid grid-cols-6 gap-2 text-center font-semibold md:grid-cols-6">
-          <div>Name</div>
-          <div>Car Number</div>
-          <div>Services</div>
-          <div>Total</div>
-          <div>Date</div>
-          <div>Actions</div>
-        </div>
-
+      <div className="flex flex-col space-y-4">
         {currentInvoices.map((invoice) => (
           <div
-            className="grid grid-cols-2 gap-2 border-b border-gray-400 py-2 text-center text-sm md:grid-cols-6 md:gap-4"
+            className="border-b border-gray-400 p-4 md:grid md:grid-cols-6 md:gap-4 md:text-center md:text-sm"
             key={invoice._id}
           >
-            <div>{invoice.name}</div>
-            <div>{invoice.carNumber}</div>
-            <div>{invoice.services.join(", ")}</div>
-            <div>${invoice.total.toFixed(2)}</div>
-            <div>{invoice.date}</div>
+            {/* Display each row as a card on mobile */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-center">
+              <span className="font-semibold md:hidden">Name: </span>
+              <span>{invoice.name}</span>
+            </div>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-center">
+              <span className="font-semibold md:hidden">Car Number: </span>
+              <span>{invoice.carNumber}</span>
+            </div>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-center">
+              <span className="font-semibold md:hidden">Services: </span>
+              <span>{invoice.services.join(", ")}</span>
+            </div>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-center">
+              <span className="font-semibold md:hidden">Total: </span>
+              <span>${invoice.total.toFixed(2)}</span>
+            </div>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-center">
+              <span className="font-semibold md:hidden">Date: </span>
+              <span>{invoice.date}</span>
+            </div>
             <div className="flex justify-center space-x-2">
               <button
                 onClick={() => handleUpdateInvoice(invoice._id)}
