@@ -8,15 +8,12 @@
     "start": "electron .",
     "lint": "next lint",
     "dist": "electron-builder",
-    "dev": "concurrently \"npm run dev-frontend\" \"npm run dev-backend\"",
-    "dev-frontend": "next dev",
-    "dev-backend": "node src/server.js"
+    "dev": "npm run dev-frontend",
+    "dev-frontend": "next dev"
   },
   "dependencies": {
     "apexcharts": "^3.45.2",
     "axios": "^1.7.7",
-    "cors": "^2.8.5",
-    "express": "^4.21.1",
     "flatpickr": "^4.6.13",
     "jsvectormap": "^1.5.3",
     "next": "^14.1.4",
@@ -26,8 +23,7 @@
     "react-quill": "^2.0.0",
     "react-select": "^5.8.0",
     "react-table": "^7.8.0",
-    "react-toastify": "^10.0.5",
-    "sqlite3": "^5.1.7"
+    "react-toastify": "^10.0.5"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -35,7 +31,6 @@
     "@types/react-dom": "^18",
     "@types/react-table": "^7.7.19",
     "autoprefixer": "^10.0.1",
-    "concurrently": "^9.0.1",
     "electron": "^32.2.0",
     "electron-builder": "^25.1.8",
     "eslint": "^8",
@@ -51,7 +46,6 @@
     "productName": "YourAppName",
     "files": [
       "main.js",
-      "server/**/*",
       "out/**/*"
     ]
   }
