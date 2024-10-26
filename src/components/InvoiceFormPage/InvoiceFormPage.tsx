@@ -152,10 +152,7 @@ const InvoiceFormPage = () => {
 
     try {
       // Send POST request to your API
-      const response = await axios.post(
-        "http://localhost:4000/api/invoices",
-        newInvoiceData,
-      );
+      const response = await axios.post("/api/invoices", newInvoiceData);
       console.log("Invoice created with ID:", response.data.id);
 
       // Store invoice data for printing
