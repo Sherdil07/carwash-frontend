@@ -151,9 +151,9 @@ const InvoiceFormPage = () => {
     };
 
     try {
-      // Send POST request to your API
+      // Update the URL to point to your deployed backend
       const response = await axios.post(
-        "http://localhost:4000/api/invoices",
+        "https://carwash-backend-eight.vercel.app/api/invoices", // Update this URL
         newInvoiceData,
       );
       console.log("Invoice created with ID:", response.data.id);
@@ -274,7 +274,7 @@ const InvoiceFormPage = () => {
           </div>
 
           {/* Car Number and Car Type */}
-          <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="mb-1 block">Car No</label>
               <input
@@ -305,87 +305,88 @@ const InvoiceFormPage = () => {
             </div>
           </div>
 
-          {/* Services with Checkboxes */}
-          <h3 className="mb-2 text-xl font-bold">Services</h3>
-          <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4">
-            {Object.keys(formData.services).map((service) => {
-              const carType = formData.carType as keyof typeof servicePrices; // Assert carType to match the keys of servicePrices
-
-              return (
-                <div key={service}>
-                  <label className="inline-flex items-center">
-                    <input
-                      type="checkbox"
-                      name={`services.${service}`}
-                      checked={
-                        formData.services[
-                          service as keyof typeof formData.services
-                        ]
-                      }
-                      onChange={handleChange}
-                      className="dark:bg-light-blue-100 h-5 w-5 rounded border dark:text-black"
-                    />
-                    <span className="ml-2">
-                      {service.charAt(0).toUpperCase() + service.slice(1)} ( $
-                      {formData.carType &&
-                      servicePrices[carType] &&
-                      servicePrices[carType][
-                        service as keyof typeof servicePrices.Sedan
+          {/* Services Selection */}
+          <h3 className="mb-2 text-lg font-bold">Select Services</h3>
+          <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+            {Object.keys(formData.services).map((service) => (
+              <div key={service}>
+                <label className="mb-1 block">
+                  <input
+                    type="checkbox"
+                    name={`services.${service}`}
+                    checked={
+                      formData.services[
+                        service as keyof typeof formData.services
                       ]
-                        ? servicePrices[carType][
-                            service as keyof typeof servicePrices.Sedan
-                          ]
-                        : 0}
-                      )
-                    </span>
-                  </label>
-                </div>
-              );
-            })}
+                    }
+                    onChange={handleChange}
+                  />
+                  {service.charAt(0).toUpperCase() + service.slice(1)}
+                </label>
+              </div>
+            ))}
           </div>
 
-          {/* Discount and Total */}
-          <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1 block">Discount</label>
-              <input
-                type="number"
-                name="discount"
-                value={formData.discount}
-                onChange={handleChange}
-                className="dark:bg-light-blue-100 w-full rounded border px-4 py-2 dark:text-black"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block">Total</label>
-              <input
-                type="text"
-                value={`$${calculateTotal().toFixed(2)}`}
-                disabled
-                className="dark:bg-light-blue-100 w-full rounded border px-4 py-2 dark:text-black"
-              />
-            </div>
+          {/* Discount */}
+          <div className="mb-4">
+            <label className="mb-1 block">Discount</label>
+            <input
+              type="number"
+              name="discount"
+              value={formData.discount}
+              onChange={handleChange}
+              className="dark:bg-light-blue-100 w-full rounded border px-4 py-2 dark:text-black"
+              min={0}
+            />
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+            className="w-full rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600"
           >
-            Add Invoice
+            Submit Invoice
           </button>
+        </form>
 
-          {/* Print Invoice Button */}
-          {isInvoiceVisible && (
+        {/* Invoice Preview */}
+        {isInvoiceVisible && (
+          <div className="mt-8 rounded-md border border-gray-300 p-4">
+            <h3 className="mb-2 text-lg font-bold">Invoice Preview</h3>
+            <p>
+              <strong>Name:</strong> {invoiceData?.name}
+            </p>
+            <p>
+              <strong>Email:</strong> {invoiceData?.email}
+            </p>
+            <p>
+              <strong>Phone No:</strong> {invoiceData?.phone}
+            </p>
+            <p>
+              <strong>Car No:</strong> {invoiceData?.carNumber}
+            </p>
+            <p>
+              <strong>Car Type:</strong> {invoiceData?.carType}
+            </p>
+            <p>
+              <strong>Services:</strong> {invoiceData?.services.join(", ")}
+            </p>
+            <p>
+              <strong>Total:</strong> ${invoiceData?.total.toFixed(2)}
+            </p>
+            <p>
+              <strong>Date:</strong> {currentDate}
+            </p>
+
+            {/* Print Button */}
             <button
-              type="button"
               onClick={handlePrint}
-              className="ml-4 rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+              className="mt-4 rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-600"
             >
               Print Invoice
             </button>
-          )}
-        </form>
+          </div>
+        )}
       </div>
     </DefaultLayout>
   );

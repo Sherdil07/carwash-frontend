@@ -28,7 +28,9 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
-        const response = await axios.get("/api/invoices");
+        const response = await axios.get(
+          "https://carwash-backend-eight.vercel.app/api/invoices",
+        );
         setInvoiceData(response.data);
       } catch (error) {
         console.error("Error fetching invoices:", error);
@@ -40,7 +42,10 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
   // Add new invoice
   const handleAddInvoice = async (newInvoice: InvoiceData) => {
     try {
-      const response = await axios.post("/api/invoices", newInvoice);
+      const response = await axios.post(
+        "https://carwash-backend-eight.vercel.app/api/invoices",
+        newInvoice,
+      );
       setInvoiceData((prev) => [...prev, response.data]);
       addInvoice(response.data);
     } catch (error) {
@@ -55,7 +60,9 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
     );
     if (confirmed) {
       try {
-        await axios.delete(`/api/invoices/${id}`);
+        await axios.delete(
+          `https://carwash-backend-eight.vercel.app/api/invoices/${id}`,
+        );
         setInvoiceData((prev) => prev.filter((invoice) => invoice._id !== id));
       } catch (error) {
         console.error("Error deleting invoice:", error);
@@ -71,7 +78,10 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
     if (updatedDetails) {
       try {
         const parsedInvoice: Partial<InvoiceData> = JSON.parse(updatedDetails);
-        const response = await axios.put(`/api/invoices/${id}`, parsedInvoice);
+        const response = await axios.put(
+          `https://carwash-backend-eight.vercel.app/api/invoices/${id}`,
+          parsedInvoice,
+        );
         setInvoiceData((prev) =>
           prev.map((invoice) => (invoice._id === id ? response.data : invoice)),
         );
