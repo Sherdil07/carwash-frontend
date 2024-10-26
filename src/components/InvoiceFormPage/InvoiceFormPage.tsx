@@ -306,11 +306,20 @@ const InvoiceFormPage = () => {
           </div>
 
           {/* Services Selection */}
+          {/* Services Selection */}
           <h3 className="mb-2 text-lg font-bold">Select Services</h3>
           <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
-            {Object.keys(formData.services).map((service) => (
-              <div key={service}>
-                <label className="mb-1 block">
+            {Object.keys(formData.services).map((service) => {
+              // Get price for the selected car type for each service
+              const selectedCarType = formData.carType;
+              const servicePrice = selectedCarType
+                ? servicePrices[selectedCarType as keyof typeof servicePrices][
+                    service as keyof typeof servicePrices.Sedan // Adjust type as needed
+                  ]
+                : 0;
+
+              return (
+                <div key={service} className="flex items-center">
                   <input
                     type="checkbox"
                     name={`services.${service}`}
@@ -320,11 +329,15 @@ const InvoiceFormPage = () => {
                       ]
                     }
                     onChange={handleChange}
+                    className="mr-2"
                   />
-                  {service.charAt(0).toUpperCase() + service.slice(1)}
-                </label>
-              </div>
-            ))}
+                  <label className="block">
+                    {service.charAt(0).toUpperCase() + service.slice(1)} - $
+                    {servicePrice.toFixed(2)}
+                  </label>
+                </div>
+              );
+            })}
           </div>
 
           {/* Discount */}
