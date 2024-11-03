@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+//CSV CODE
+
 interface InvoiceData {
   _id: string;
   name: string;
@@ -86,6 +88,45 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
       }
     }
   };
+  // csv code
+  const exportToCSV = () => {
+    const csvRows = [
+      [
+        "ID",
+        "Name",
+        "Email",
+        "Phone",
+        "Car Number",
+        "Car Type",
+        "Services",
+        "Total",
+        "Date",
+      ], // Header row
+      ...invoiceData.map((invoice) => [
+        invoice._id,
+        invoice.name,
+        invoice.email,
+        invoice.phone,
+        invoice.carNumber,
+        invoice.carType,
+        invoice.services.join(", "),
+        invoice.total.toFixed(2),
+        invoice.date,
+      ]),
+    ];
+
+    const csvContent = csvRows
+      .map((row) => row.map((value) => `"${value}"`).join(","))
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "invoices.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   const filteredInvoices = invoiceData.filter((invoice) =>
     invoice.name.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -110,6 +151,12 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
           className="rounded border px-4 py-2 text-black"
         />
       </div>
+      <button
+        onClick={exportToCSV}
+        className="mr-2 rounded bg-green-500 px-4 py-2 text-white"
+      >
+        Export CSV
+      </button>
 
       <div className="flex flex-col space-y-4">
         {currentInvoices.map((invoice) => (
