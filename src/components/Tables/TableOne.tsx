@@ -101,7 +101,7 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
         "Services",
         "Total",
         "Date",
-      ],
+      ], // Header row
       ...invoiceData.map((invoice) => [
         invoice._id,
         invoice.name,
@@ -128,6 +128,7 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
     URL.revokeObjectURL(url);
   };
 
+  // Filter invoices by search term, start date, and end date
   const filteredInvoices = invoiceData.filter((invoice) => {
     const matchesSearch = invoice.name
       .toLowerCase()
@@ -143,6 +144,7 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
     (sum, invoice) => sum + invoice.total,
     0,
   );
+
   const totalPages = Math.ceil(filteredInvoices.length / rowsPerPage);
   const currentInvoices = filteredInvoices.slice(
     (currentPage - 1) * rowsPerPage,
@@ -150,33 +152,37 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
   );
 
   return (
-    <div className="bg-dark-blue rounded-lg p-4 text-white shadow-lg">
+    <div className="bg-dark-blue rounded-lg px-6 pb-6 pt-4 text-white shadow-lg">
       <h4 className="mb-5 text-xl font-bold">Invoices</h4>
-      <h5 className="mb-4 text-lg font-semibold">
+
+      <h5 className="mb-2 text-lg font-semibold">
         Total Sales: ${totalSales.toFixed(2)}
       </h5>
 
-      {/* Filters and CSV Button Section */}
-      <div className="mb-4 flex flex-wrap items-center gap-4 md:flex-nowrap md:justify-between">
-        <div className="flex flex-col gap-4 md:flex-row">
-          <div className="flex items-center gap-2">
-            <label className="text-sm">From:</label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="rounded border px-4 py-2 text-black"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <label className="text-sm">To:</label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="rounded border px-4 py-2 text-black"
-            />
-          </div>
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <label className="text-sm">From:</label>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="rounded border px-4 py-2 text-black"
+          />
+          <label className="text-sm">To:</label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className="rounded border px-4 py-2 text-black"
+          />
+        </div>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={exportToCSV}
+            className="rounded bg-green-500 px-4 py-2 text-white"
+          >
+            Export CSV
+          </button>
           <input
             type="text"
             placeholder="Search by name"
@@ -185,42 +191,31 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
             className="rounded border px-4 py-2 text-black"
           />
         </div>
-
-        <button
-          onClick={exportToCSV}
-          className="mt-2 rounded bg-green-500 px-4 py-2 text-white md:mr-0 md:mt-0 md:self-end"
-        >
-          Export CSV
-        </button>
       </div>
 
       <div className="flex flex-col space-y-4">
+        {/* Table Headings */}
+        <div className="grid grid-cols-6 gap-4 border-b border-gray-400 p-4 text-center text-sm font-semibold">
+          <span>Name</span>
+          <span>Car Number</span>
+          <span>Services</span>
+          <span>Total</span>
+          <span>Date</span>
+          <span>Actions</span>
+        </div>
+
+        {/* Table Rows */}
         {currentInvoices.map((invoice) => (
           <div
+            className="grid grid-cols-6 gap-4 border-b border-gray-400 p-4 text-center text-sm"
             key={invoice._id}
-            className="space-y-2 border-b border-gray-400 p-4 text-center text-sm md:grid md:grid-cols-6 md:gap-4"
           >
-            <div className="flex justify-between md:col-span-1">
-              <span className="font-semibold">Name:</span>
-              <span>{invoice.name}</span>
-            </div>
-            <div className="flex justify-between md:col-span-1">
-              <span className="font-semibold">Car Number:</span>
-              <span>{invoice.carNumber}</span>
-            </div>
-            <div className="flex justify-between md:col-span-1">
-              <span className="font-semibold">Services:</span>
-              <span>{invoice.services.join(", ")}</span>
-            </div>
-            <div className="flex justify-between md:col-span-1">
-              <span className="font-semibold">Total:</span>
-              <span>${invoice.total.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between md:col-span-1">
-              <span className="font-semibold">Date:</span>
-              <span>{invoice.date}</span>
-            </div>
-            <div className="flex justify-center space-x-2 md:col-span-1">
+            <span>{invoice.name}</span>
+            <span>{invoice.carNumber}</span>
+            <span>{invoice.services.join(", ")}</span>
+            <span>${invoice.total.toFixed(2)}</span>
+            <span>{invoice.date}</span>
+            <div className="flex justify-center space-x-2">
               <button
                 onClick={() => handleUpdateInvoice(invoice._id)}
                 className="rounded bg-yellow-500 px-2 py-1 text-white"
