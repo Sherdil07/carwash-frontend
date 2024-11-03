@@ -192,30 +192,62 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
       </div>
 
       <div className="flex flex-col space-y-4">
+        <div className="hidden sm:grid sm:grid-cols-6 sm:gap-4 sm:border-b sm:border-gray-400 sm:p-4 sm:text-center sm:text-sm sm:font-semibold">
+          <span>Name</span>
+          <span>Car Number</span>
+          <span>Services</span>
+          <span>Total</span>
+          <span>Date</span>
+          <span>Actions</span>
+        </div>
+
         {currentInvoices.map((invoice) => (
           <div
             className="space-y-2 border-b border-gray-400 p-4 text-sm sm:grid sm:grid-cols-6 sm:gap-4 sm:space-y-0 sm:text-center"
             key={invoice._id}
           >
-            <div>
+            <div className="sm:hidden">
               <span className="font-semibold">Name:</span> {invoice.name}
             </div>
-            <div>
+            <div className="sm:hidden">
               <span className="font-semibold">Car Number:</span>{" "}
               {invoice.carNumber}
             </div>
-            <div>
+            <div className="sm:hidden">
               <span className="font-semibold">Services:</span>{" "}
               {invoice.services.join(", ")}
             </div>
-            <div>
+            <div className="sm:hidden">
               <span className="font-semibold">Total:</span> $
               {invoice.total.toFixed(2)}
             </div>
-            <div>
+            <div className="sm:hidden">
               <span className="font-semibold">Date:</span> {invoice.date}
             </div>
-            <div className="flex justify-center space-x-2">
+            <div className="flex space-x-2 sm:hidden">
+              <button
+                onClick={() => handleUpdateInvoice(invoice._id)}
+                className="rounded bg-yellow-500 px-2 py-1 text-white"
+              >
+                Update
+              </button>
+              <button
+                onClick={() => handleDeleteInvoice(invoice._id)}
+                className="rounded bg-red-500 px-2 py-1 text-white"
+              >
+                Delete
+              </button>
+            </div>
+
+            {/* Original desktop view */}
+            <span className="hidden sm:block">{invoice.name}</span>
+            <span className="hidden sm:block">{invoice.carNumber}</span>
+            <span className="hidden sm:block">
+              {invoice.services.join(", ")}
+            </span>
+            <span className="hidden sm:block">${invoice.total.toFixed(2)}</span>
+            <span className="hidden sm:block">{invoice.date}</span>
+            <div className="hidden sm:flex sm:justify-center sm:space-x-2">
               <button
                 onClick={() => handleUpdateInvoice(invoice._id)}
                 className="rounded bg-yellow-500 px-2 py-1 text-white"
