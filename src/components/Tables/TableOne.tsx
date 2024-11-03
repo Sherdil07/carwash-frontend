@@ -143,6 +143,12 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
       <h4 className="mb-5 text-xl font-bold">Invoices</h4>
 
       <div className="mb-4 flex justify-end">
+        <button
+          onClick={exportToCSV}
+          className="mr-2 rounded bg-green-500 px-4 py-2 text-white"
+        >
+          Export CSV
+        </button>
         <input
           type="text"
           placeholder="Search by name"
@@ -151,12 +157,6 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
           className="rounded border px-4 py-2 text-black"
         />
       </div>
-      <button
-        onClick={exportToCSV}
-        className="mr-2 rounded bg-green-500 px-4 py-2 text-white"
-      >
-        Export CSV
-      </button>
 
       <div className="flex flex-col space-y-4">
         {currentInvoices.map((invoice) => (
