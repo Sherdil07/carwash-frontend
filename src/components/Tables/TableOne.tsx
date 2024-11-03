@@ -21,6 +21,8 @@ interface TableOneProps {
 const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
   const [invoiceData, setInvoiceData] = useState<InvoiceData[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5;
 
@@ -87,13 +89,6 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
     }
   };
 
-  // Calculate total sales
-  const totalSales = invoiceData.reduce(
-    (sum, invoice) => sum + invoice.total,
-    0,
-  );
-
-  // CSV export function
   const exportToCSV = () => {
     const csvRows = [
       [
@@ -133,8 +128,21 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
     URL.revokeObjectURL(url);
   };
 
-  const filteredInvoices = invoiceData.filter((invoice) =>
-    invoice.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  // Filter invoices by search term, start date, and end date
+  const filteredInvoices = invoiceData.filter((invoice) => {
+    const matchesSearch = invoice.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const invoiceDate = new Date(invoice.date);
+    const isWithinDateRange =
+      (!startDate || invoiceDate >= new Date(startDate)) &&
+      (!endDate || invoiceDate <= new Date(endDate));
+    return matchesSearch && isWithinDateRange;
+  });
+
+  const totalSales = filteredInvoices.reduce(
+    (sum, invoice) => sum + invoice.total,
+    0,
   );
 
   const totalPages = Math.ceil(filteredInvoices.length / rowsPerPage);
@@ -151,20 +159,38 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
         Total Sales: ${totalSales.toFixed(2)}
       </h5>
 
-      <div className="mb-4 flex justify-end">
-        <button
-          onClick={exportToCSV}
-          className="mr-2 rounded bg-green-500 px-4 py-2 text-white"
-        >
-          Export CSV
-        </button>
-        <input
-          type="text"
-          placeholder="Search by name"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="rounded border px-4 py-2 text-black"
-        />
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <label className="text-sm">From:</label>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="rounded border px-4 py-2 text-black"
+          />
+          <label className="text-sm">To:</label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className="rounded border px-4 py-2 text-black"
+          />
+        </div>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={exportToCSV}
+            className="rounded bg-green-500 px-4 py-2 text-white"
+          >
+            Export CSV
+          </button>
+          <input
+            type="text"
+            placeholder="Search by name"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="rounded border px-4 py-2 text-black"
+          />
+        </div>
       </div>
 
       <div className="flex flex-col space-y-4">
