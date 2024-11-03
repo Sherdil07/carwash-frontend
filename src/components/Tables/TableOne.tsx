@@ -186,7 +186,6 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
           />
         </div>
 
-        {/* CSV Button - Right aligned on mobile */}
         <button
           onClick={exportToCSV}
           className="mt-2 rounded bg-green-500 px-4 py-2 text-white md:mr-0 md:mt-0 md:self-end"
@@ -196,40 +195,29 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
       </div>
 
       <div className="flex flex-col space-y-4">
-        {/* Table Headings - Hidden on Mobile */}
-        <div className="hidden grid-cols-6 gap-4 border-b border-gray-400 p-4 text-center text-sm font-semibold md:grid">
-          <span>Name</span>
-          <span>Car Number</span>
-          <span>Services</span>
-          <span>Total</span>
-          <span>Date</span>
-          <span>Actions</span>
-        </div>
-
-        {/* Table Rows - Mobile-friendly layout */}
         {currentInvoices.map((invoice) => (
           <div
             key={invoice._id}
             className="space-y-2 border-b border-gray-400 p-4 text-center text-sm md:grid md:grid-cols-6 md:gap-4"
           >
-            <div className="flex flex-col md:col-span-1">
-              <span className="font-semibold md:hidden">Name:</span>
+            <div className="flex justify-between md:col-span-1">
+              <span className="font-semibold">Name:</span>
               <span>{invoice.name}</span>
             </div>
-            <div className="flex flex-col md:col-span-1">
-              <span className="font-semibold md:hidden">Car Number:</span>
+            <div className="flex justify-between md:col-span-1">
+              <span className="font-semibold">Car Number:</span>
               <span>{invoice.carNumber}</span>
             </div>
-            <div className="flex flex-col md:col-span-1">
-              <span className="font-semibold md:hidden">Services:</span>
+            <div className="flex justify-between md:col-span-1">
+              <span className="font-semibold">Services:</span>
               <span>{invoice.services.join(", ")}</span>
             </div>
-            <div className="flex flex-col md:col-span-1">
-              <span className="font-semibold md:hidden">Total:</span>
+            <div className="flex justify-between md:col-span-1">
+              <span className="font-semibold">Total:</span>
               <span>${invoice.total.toFixed(2)}</span>
             </div>
-            <div className="flex flex-col md:col-span-1">
-              <span className="font-semibold md:hidden">Date:</span>
+            <div className="flex justify-between md:col-span-1">
+              <span className="font-semibold">Date:</span>
               <span>{invoice.date}</span>
             </div>
             <div className="flex justify-center space-x-2 md:col-span-1">
