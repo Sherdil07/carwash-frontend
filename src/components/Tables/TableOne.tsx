@@ -2,8 +2,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-//CSV CODE
-
 interface InvoiceData {
   _id: string;
   name: string;
@@ -88,7 +86,14 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
       }
     }
   };
-  // csv code
+
+  // Calculate total sales
+  const totalSales = invoiceData.reduce(
+    (sum, invoice) => sum + invoice.total,
+    0,
+  );
+
+  // CSV export function
   const exportToCSV = () => {
     const csvRows = [
       [
@@ -142,6 +147,10 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
     <div className="bg-dark-blue rounded-lg px-6 pb-6 pt-4 text-white shadow-lg">
       <h4 className="mb-5 text-xl font-bold">Invoices</h4>
 
+      <h5 className="mb-2 text-lg font-semibold">
+        Total Sales: ${totalSales.toFixed(2)}
+      </h5>
+
       <div className="mb-4 flex justify-end">
         <button
           onClick={exportToCSV}
@@ -159,32 +168,27 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
       </div>
 
       <div className="flex flex-col space-y-4">
+        {/* Table Headings */}
+        <div className="grid grid-cols-6 gap-4 border-b border-gray-400 p-4 text-center text-sm font-semibold">
+          <span>Name</span>
+          <span>Car Number</span>
+          <span>Services</span>
+          <span>Total</span>
+          <span>Date</span>
+          <span>Actions</span>
+        </div>
+
+        {/* Table Rows */}
         {currentInvoices.map((invoice) => (
           <div
-            className="border-b border-gray-400 p-4 md:grid md:grid-cols-6 md:gap-4 md:text-center md:text-sm"
+            className="grid grid-cols-6 gap-4 border-b border-gray-400 p-4 text-center text-sm"
             key={invoice._id}
           >
-            {/* Display each row as a card on mobile */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-center">
-              <span className="font-semibold md:hidden">Name: </span>
-              <span>{invoice.name}</span>
-            </div>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-center">
-              <span className="font-semibold md:hidden">Car Number: </span>
-              <span>{invoice.carNumber}</span>
-            </div>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-center">
-              <span className="font-semibold md:hidden">Services: </span>
-              <span>{invoice.services.join(", ")}</span>
-            </div>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-center">
-              <span className="font-semibold md:hidden">Total: </span>
-              <span>${invoice.total.toFixed(2)}</span>
-            </div>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-center">
-              <span className="font-semibold md:hidden">Date: </span>
-              <span>{invoice.date}</span>
-            </div>
+            <span>{invoice.name}</span>
+            <span>{invoice.carNumber}</span>
+            <span>{invoice.services.join(", ")}</span>
+            <span>${invoice.total.toFixed(2)}</span>
+            <span>{invoice.date}</span>
             <div className="flex justify-center space-x-2">
               <button
                 onClick={() => handleUpdateInvoice(invoice._id)}
