@@ -6,6 +6,12 @@ import DefaultLayout from "@/components/Layouts/DefaultLaout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { toast } from "react-toastify";
 
+interface Service {
+  carType: string;
+  name: string; // Replace with actual properties as needed
+  price: number;
+}
+
 const InvoiceFormPage = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -28,7 +34,8 @@ const InvoiceFormPage = () => {
 
   const [isInvoiceVisible, setInvoiceVisible] = useState(false); // For showing invoice preview
   const [currentDate, setCurrentDate] = useState<string>(""); // For current date
-  const [invoiceData, setInvoiceData] = useState<any>(null); // For storing invoice data for printing
+  const [invoiceData, setInvoiceData] = useState<any>(null);
+  const [availableServices, setAvailableServices] = useState<Service[]>([]); // For storing invoice data for printing
 
   const carTypes = ["Sedan", "SUV", "Truck", "Hatchback"];
 
@@ -227,6 +234,29 @@ const InvoiceFormPage = () => {
     }/${today.getFullYear()}`;
     setCurrentDate(formattedDate);
   }, []);
+
+  // Within InvoiceFormPage Component
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get<Service[]>(
+          "https://carwash-backend-eight.vercel.app/api/services",
+        );
+
+        const filteredServices = response.data.filter(
+          (service: Service) => service.carType === formData.carType,
+        );
+
+        setAvailableServices(filteredServices);
+      } catch (error) {
+        console.error("Failed to fetch services:", error);
+      }
+    };
+
+    if (formData.carType) {
+      fetchServices();
+    }
+  }, [formData.carType]);
 
   return (
     <DefaultLayout>
