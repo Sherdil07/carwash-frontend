@@ -101,7 +101,7 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
         "Services",
         "Total",
         "Date",
-      ], // Header row
+      ],
       ...invoiceData.map((invoice) => [
         invoice._id,
         invoice.name,
@@ -128,7 +128,6 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
     URL.revokeObjectURL(url);
   };
 
-  // Filter invoices by search term, start date, and end date
   const filteredInvoices = invoiceData.filter((invoice) => {
     const matchesSearch = invoice.name
       .toLowerCase()
@@ -154,12 +153,11 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
   return (
     <div className="bg-dark-blue rounded-lg px-6 pb-6 pt-4 text-white shadow-lg">
       <h4 className="mb-5 text-xl font-bold">Invoices</h4>
-
       <h5 className="mb-2 text-lg font-semibold">
         Total Sales: ${totalSales.toFixed(2)}
       </h5>
 
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
         <div className="flex items-center space-x-4">
           <label className="text-sm">From:</label>
           <input
@@ -194,27 +192,29 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
       </div>
 
       <div className="flex flex-col space-y-4">
-        {/* Table Headings */}
-        <div className="grid grid-cols-6 gap-4 border-b border-gray-400 p-4 text-center text-sm font-semibold">
-          <span>Name</span>
-          <span>Car Number</span>
-          <span>Services</span>
-          <span>Total</span>
-          <span>Date</span>
-          <span>Actions</span>
-        </div>
-
-        {/* Table Rows */}
         {currentInvoices.map((invoice) => (
           <div
-            className="grid grid-cols-6 gap-4 border-b border-gray-400 p-4 text-center text-sm"
+            className="space-y-2 border-b border-gray-400 p-4 text-sm sm:grid sm:grid-cols-6 sm:gap-4 sm:space-y-0 sm:text-center"
             key={invoice._id}
           >
-            <span>{invoice.name}</span>
-            <span>{invoice.carNumber}</span>
-            <span>{invoice.services.join(", ")}</span>
-            <span>${invoice.total.toFixed(2)}</span>
-            <span>{invoice.date}</span>
+            <div>
+              <span className="font-semibold">Name:</span> {invoice.name}
+            </div>
+            <div>
+              <span className="font-semibold">Car Number:</span>{" "}
+              {invoice.carNumber}
+            </div>
+            <div>
+              <span className="font-semibold">Services:</span>{" "}
+              {invoice.services.join(", ")}
+            </div>
+            <div>
+              <span className="font-semibold">Total:</span> $
+              {invoice.total.toFixed(2)}
+            </div>
+            <div>
+              <span className="font-semibold">Date:</span> {invoice.date}
+            </div>
             <div className="flex justify-center space-x-2">
               <button
                 onClick={() => handleUpdateInvoice(invoice._id)}
