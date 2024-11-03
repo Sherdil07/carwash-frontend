@@ -153,12 +153,12 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
   return (
     <div className="bg-dark-blue rounded-lg px-6 pb-6 pt-4 text-white shadow-lg">
       <h4 className="mb-5 text-xl font-bold">Invoices</h4>
-      <h5 className="mb-2 text-lg font-semibold">
+      <h5 className="mb-4 text-lg font-semibold sm:mb-2">
         Total Sales: ${totalSales.toFixed(2)}
       </h5>
 
-      <div className="mb-4 flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-        <div className="flex items-center space-x-4">
+      <div className="mb-4 flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+        <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-x-4">
           <label className="text-sm">From:</label>
           <input
             type="date"
@@ -174,7 +174,7 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
             className="rounded border px-4 py-2 text-black"
           />
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-x-4">
           <button
             onClick={exportToCSV}
             className="rounded bg-green-500 px-4 py-2 text-white"
@@ -239,7 +239,6 @@ const TableOne: React.FC<TableOneProps> = ({ addInvoice }) => {
               </button>
             </div>
 
-            {/* Original desktop view */}
             <span className="hidden sm:block">{invoice.name}</span>
             <span className="hidden sm:block">{invoice.carNumber}</span>
             <span className="hidden sm:block">
