@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 interface Service {
   _id: string;
@@ -28,29 +29,61 @@ const SettingsForm = () => {
       setServices(response.data);
     } catch (error) {
       console.error("Failed to fetch services:", error);
+      toast.error("Failed to fetch services.");
     }
   };
 
-  const handleServiceChange = (id: string, field: string, value: number) => {
-    setServices((prevServices) =>
-      prevServices.map((service) =>
-        service._id === id ? { ...service, [field]: value } : service,
-      ),
+  const handleServiceChange = async (
+    id: string,
+    field: string,
+    value: number,
+  ) => {
+    const updatedServices = services.map((service) =>
+      service._id === id ? { ...service, [field]: value } : service,
     );
+    setServices(updatedServices);
+
+    try {
+      await axios.put(
+        `https://carwash-backend-eight.vercel.app/api/services`,
+        { id, price: value }, // Adjusted to match your backend structure
+      );
+      toast.success("Service price updated successfully!");
+    } catch (error) {
+      console.error("Failed to update service price:", error);
+      toast.error("Failed to update service price.");
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!newServiceName || newServicePrice <= 0) return;
+
     try {
       await axios.post(
         "https://carwash-backend-eight.vercel.app/api/services",
         { carType, serviceName: newServiceName, price: newServicePrice },
       );
-      fetchServices();
-      setNewServiceName(""); // Clear the input fields
+      fetchServices(); // Refresh services after adding
+      setNewServiceName(""); // Clear input fields
       setNewServicePrice(0);
+      toast.success("Service added successfully!");
     } catch (error) {
       console.error("Failed to save service:", error);
+      toast.error("Failed to add service.");
+    }
+  };
+
+  const handleDeleteService = async (id: string) => {
+    try {
+      await axios.delete(
+        `https://carwash-backend-eight.vercel.app/api/services/${id}`,
+      );
+      setServices((prev) => prev.filter((service) => service._id !== id));
+      toast.success("Service deleted successfully!");
+    } catch (error) {
+      console.error("Failed to delete service:", error);
+      toast.error("Failed to delete service.");
     }
   };
 
@@ -84,7 +117,7 @@ const SettingsForm = () => {
             onChange={(e) => setNewServicePrice(Number(e.target.value))}
             required
           />
-          <button type="submit">Add/Update Service</button>
+          <button type="submit">Add Service</button>
         </div>
       </form>
       <ul>
@@ -106,6 +139,9 @@ const SettingsForm = () => {
                   )
                 }
               />
+              <button onClick={() => handleDeleteService(service._id)}>
+                Delete
+              </button>
             </li>
           ))}
       </ul>
